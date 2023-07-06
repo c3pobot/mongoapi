@@ -11,10 +11,9 @@ Cmds.init = async()=>{
       useUnifiedTopology: true
     })
     dbo = await mongo.db(process.env.MONGO_DB)
-    return 1
+    return true
   }catch(e){
     throw(e);
-    return 0
   }
 }
 Cmds.aggregate = async({ collection, matchCondition, data = [] })=>{
