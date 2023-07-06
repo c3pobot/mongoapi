@@ -26,7 +26,7 @@ app.use('/status', (req, res)=>{
     res.sendStatus(503)
   }
 })
-app.post('/*', async(req, res)=>{
+app.post('/*', (req, res)=>{
   handleRequest(req, res)
 })
 const handleRequest = async(req, res)=>{
