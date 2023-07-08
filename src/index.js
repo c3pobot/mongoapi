@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const mongo = require('./mongo')
 const MONGO_API_KEY = process.env.MONGO_API_KEY
 const PORT = process.env.HEALTH_PORT || 3000
-const POD_NAME = process.env.POD_NAME
+const POD_NAME = process.env.POD_NAME || 'mongoapi'
 const app = express()
 
 let mongoReady = false, server
