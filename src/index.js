@@ -1,10 +1,14 @@
+'use strict'
+const log = require('./logger')
+let logLevel = process.env.LOG_LEVEL || log.Level.INFO;
+log.setLevel(logLevel);
 const express = require('express')
 const compression = require('compression');
 const bodyParser = require('body-parser')
 const mongo = require('./mongo')
 const MONGO_API_KEY = process.env.MONGO_API_KEY
 const PORT = process.env.HEALTH_PORT || 3000
-const POD_NAME = process.env.POD_NAME || 'mongoapi'
+const POD_NAME = process.env.WORKER_NAME || 'mongoapi'
 const app = express()
 
 let mongoReady = false, server
@@ -23,7 +27,7 @@ app.use('/status', (req, res)=>{
   if(mongoReady){
     res.json({status: 'ok'})
   }else{
-    res.sendStatus(503)
+    res.sendStatus(400)
   }
 })
 app.post('/*', (req, res)=>{
@@ -33,19 +37,19 @@ const handleRequest = async(req, res)=>{
   try{
     let apiKey = req?.query?.apiKey, tempCmd = req?.path?.replace('/', '')
     if(MONGO_API_KEY && MONGO_API_KEY !== apiKey){
-      res.sendStatus(503)
+      res.sendStatus(400)
     }else{
       if(tempCmd && req?.body?.collection && mongo[tempCmd] && tempCmd !== 'init'){
         const obj = await mongo[tempCmd](req.body)
         res.json(obj)
         return;
       }else{
-        res.sendStatus(503)
+        res.sendStatus(400)
       }
     }
   }catch(e){
-    console.error(e);
-    res.sendStatus(503)
+    log.error(e);
+    res.sendStatus(400)
   }
 }
 const CheckMongo = async()=>{
@@ -53,15 +57,15 @@ const CheckMongo = async()=>{
     let mongoStatus = await mongo.init()
     if(mongoStatus){
       mongoReady = true
-      console.log('Mongo connection is ready on '+POD_NAME)
+      log.info('Mongo connection is ready on '+POD_NAME)
       server = app.listen(PORT || 3000, ()=>{
-        console.log(POD_NAME+' api is Listening on ', server.address().port)
+        log.info(POD_NAME+' api is Listening on ', server.address().port)
       })
     }else{
       setTimeout(CheckMongo, 5000)
     }
   }catch(e){
-    console.error(e);
+    log.error(e);
     setTimeout(CheckMongo, 5000)
   }
 }
