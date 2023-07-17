@@ -20,7 +20,7 @@ function getTimeStamp(){
   return dateTime.toLocaleString('en-US', { timeZone: 'Etc/GMT+5', hour12: false })
 }
 function getContent(msg){
-  if(!msg.stack) return msg
+  if(!msg?.stack) return msg
   let content = ''
   let stack = msg.stack?.split('\n')
   for(let i = 0;i<3;i++) content += stack[i]+'\n'
