@@ -1,5 +1,5 @@
 'use strict'
-const log = require('./logger')
+const log = require('logger')
 let logLevel = process.env.LOG_LEVEL || log.Level.INFO;
 log.setLevel(logLevel);
 const express = require('express')
