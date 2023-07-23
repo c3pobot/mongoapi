@@ -59,7 +59,7 @@ const CheckMongo = async()=>{
       mongoReady = true
       log.info('Mongo connection is ready on '+POD_NAME)
       server = app.listen(PORT || 3000, ()=>{
-        log.info(POD_NAME+' api is Listening on ', server.address().port)
+        log.info(POD_NAME+' api is Listening on '+server.address().port)
       })
     }else{
       setTimeout(CheckMongo, 5000)
