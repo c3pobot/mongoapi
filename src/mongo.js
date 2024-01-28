@@ -134,4 +134,12 @@ Cmds.next = async({collection, matchCondition, data})=>{
     throw (e)
   }
 }
+Cmds.insert = async({collection, data})=>{
+  try{
+    data.TTL = new Date()
+    return await dbo.collection(collection).insertOne(data)
+  }catch(e){
+    throw (e)
+  }
+}
 module.exports = Cmds

@@ -40,7 +40,7 @@ const handleRequest = async(req, res)=>{
       res.sendStatus(400)
     }else{
       if(tempCmd && req?.body?.collection && mongo[tempCmd] && tempCmd !== 'init'){
-        const obj = await mongo[tempCmd](req.body)
+        let obj = await mongo[tempCmd](req.body)
         res.json(obj)
         return;
       }else{
